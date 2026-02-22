@@ -200,14 +200,19 @@ Payments: LTC | Owo | UPI
       ]
     });
 
-    await channel.send({
-      content: `<@${worker.id}>`,
-      embeds: [
-        new EmbedBuilder()
-          .setTitle("New Order Assigned")
-          .setDescription(`Service: ${order.service}\nUser: <@${order.userId}>`)
-      ]
-    });
+  await channel.send({
+  content: `<@${worker.id}>`,
+  embeds: [
+    new EmbedBuilder()
+      .setTitle("New Order Assigned")
+      .setDescription(
+        `🆔 **Order ID:** \`${order._id}\`\n\n` +
+        `📦 **Service:** ${order.service}\n` +
+        `👤 **User:** <@${order.userId}>`
+      )
+      .setColor("Green")
+  ]
+}); 
 
     return interaction.reply({ content: "Order created successfully!", ephemeral: true });
   }
