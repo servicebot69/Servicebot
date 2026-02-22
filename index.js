@@ -30,8 +30,44 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
-client.once("ready", () => {
+const { REST, Routes, SlashCommandBuilder } = require("discord.js");
+
+client.once("ready", async () => {
   console.log(`${client.user.tag} is online`);
+
+  const commands = [
+    new SlashCommandBuilder()
+      .setName("panel")
+      .setDescription("Open service panel")
+      .toJSON(),
+
+    new SlashCommandBuilder()
+      .setName("submit")
+      .setDescription("Mark order as completed")
+      .addStringOption(option =>
+        option
+          .setName("orderid")
+          .setDescription("Order ID")
+          .setRequired(true)
+      )
+      .toJSON()
+  ];
+
+  const rest = new REST({ version: "10" }).setToken(process.env.BOT_TOKEN);
+
+  try {
+    await rest.put(
+      Routes.applicationGuildCommands(
+        process.env.CLIENT_ID,
+        process.env.GUILD_ID
+      ),
+      { body: commands }
+    );
+
+    console.log("Slash commands registered!");
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 client.on("interactionCreate", async interaction => {
