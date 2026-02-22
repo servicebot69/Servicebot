@@ -105,28 +105,38 @@ Payments: LTC | Owo | UPI
     // WORKER SUBMIT
     if (interaction.commandName === "submit") {
 
-      const orderId = interaction.options.getString("orderid");
-      const order = await Order.findById(orderId);
-      if (!order) return interaction.reply({ content: "Order not found.", ephemeral: true });
+  await interaction.deferReply({ ephemeral: true });
 
-      order.status = "completed";
-      await order.save();
+  try {
+    const orderId = interaction.options.getString("orderid");
 
-      const user = await client.users.fetch(order.userId);
-
-      const payBtn = new ButtonBuilder()
-        .setCustomId(`pay_${order._id}`)
-        .setLabel("Pay Now")
-        .setStyle(ButtonStyle.Success);
-
-      await user.send({
-        embeds: [new EmbedBuilder().setTitle("Your Service is Ready!")],
-        components: [new ActionRowBuilder().addComponents(payBtn)]
-      });
-
-      return interaction.reply({ content: "Order marked completed.", ephemeral: true });
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return interaction.editReply("Order not found.");
     }
+
+    order.status = "completed";
+    await order.save();
+
+    const user = await client.users.fetch(order.userId);
+
+    const payBtn = new ButtonBuilder()
+      .setCustomId(`pay_${order._id}`)
+      .setLabel("Pay Now")
+      .setStyle(ButtonStyle.Success);
+
+    await user.send({
+      embeds: [new EmbedBuilder().setTitle("Your Service is Ready!")],
+      components: [new ActionRowBuilder().addComponents(payBtn)]
+    });
+
+    return interaction.editReply("Order marked completed.");
+
+  } catch (err) {
+    console.error(err);
+    return interaction.editReply("Something went wrong.");
   }
+    }
 
   // SERVICE SELECT → MODAL
   if (interaction.isStringSelectMenu() && interaction.customId === "service_select") {
