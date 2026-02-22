@@ -1,0 +1,14 @@
+{
+  "name": "service-bot",
+  "version": "1.0.0",
+  "description": "Discord Service Automation Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "mongoose": "^7.6.1",
+    "dotenv": "^16.3.1"
+  }
+}
