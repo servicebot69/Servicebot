@@ -137,6 +137,7 @@ Payments: LTC | Owo | UPI
     return interaction.editReply("Something went wrong.");
   }
     }
+    }
 
   // SERVICE SELECT → MODAL
   if (interaction.isStringSelectMenu() && interaction.customId === "service_select") {
